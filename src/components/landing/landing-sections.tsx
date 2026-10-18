@@ -141,7 +141,7 @@ export function LandingSections() {
 
       <footer className="border-t border-white/10">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-8 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <p>An independent portfolio project · © 2026</p>
+          <p>An independent portfolio project · © 2026 Shahil</p>
           <a
             href="https://github.com/shahil5z/atlas"
             target="_blank"
