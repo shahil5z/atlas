@@ -1,0 +1,539 @@
+@import "tailwindcss";
+
+:root {
+  --background: #02050b;
+  --foreground: #f2f5f8;
+  --card: #0c121b;
+  --muted: #141b26;
+  --muted-foreground: #98a3b3;
+  --border: #223044;
+  --accent: #e7eef8;
+  --accent-foreground: #071018;
+  --danger: #e7a394;
+  --ok: #9dccb0;
+  --ring: #7eb0ff;
+  --source: rgba(126, 176, 255, 0.14);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-danger: var(--danger);
+  --color-ok: var(--ok);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  background: var(--background);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: #7eb0ff;
+  color: #071018;
+}
+
+.atlas-stage {
+  background-image: radial-gradient(420px 220px at 50% 18%, rgba(60, 120, 210, 0.14), transparent 70%);
+}
+
+.source-active {
+  background: var(--source);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  z-index: 50;
+  transform: translateY(-150%);
+  border-radius: 0.5rem;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  padding: 0.5rem 0.75rem;
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+@keyframes atlas-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes atlas-slide {
+  0% {
+    transform: translateX(-130%);
+  }
+  100% {
+    transform: translateX(340%);
+  }
+}
+
+.atlas-pulse {
+  animation: atlas-pulse 1.6s ease-in-out infinite;
+}
+
+.atlas-slide {
+  animation: atlas-slide 1.35s ease-in-out infinite;
+}
+
+@keyframes atlas-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.atlas-enter {
+  animation: atlas-enter 320ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Landing presentation layer ---------- */
+
+html {
+  scroll-behavior: smooth;
+}
+
+.text-gradient {
+  background: linear-gradient(100deg, #f2f5f8 0%, #b9d3ff 40%, #5b8dff 75%, #9fc2ff 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: atlas-shimmer 8s ease-in-out infinite;
+}
+
+@keyframes atlas-shimmer {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 20%, #000 30%, transparent 75%);
+}
+
+.hero-aurora {
+  background:
+    radial-gradient(40% 50% at 70% 25%, rgba(48, 104, 255, 0.22), transparent 70%),
+    radial-gradient(35% 40% at 25% 10%, rgba(126, 176, 255, 0.12), transparent 70%);
+  filter: blur(10px);
+  animation: atlas-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes atlas-drift {
+  from {
+    transform: translate3d(-2%, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(2%, 2%, 0) scale(1.05);
+  }
+}
+
+.hero-glow {
+  background: radial-gradient(circle, rgba(60, 120, 255, 0.35), transparent 65%);
+  filter: blur(30px);
+  animation: atlas-pulse 6s ease-in-out infinite;
+}
+
+.orbit-ring {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px solid rgba(126, 176, 255, 0.16);
+}
+
+.orbit-ring::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: #b9d3ff;
+  box-shadow: 0 0 12px 2px rgba(126, 176, 255, 0.8);
+}
+
+.orbit-ring-1 {
+  inset: 2%;
+  animation: atlas-spin 40s linear infinite;
+}
+
+.orbit-ring-2 {
+  inset: 14%;
+  border-style: dashed;
+  border-color: rgba(126, 176, 255, 0.1);
+  animation: atlas-spin 28s linear infinite reverse;
+}
+
+.orbit-ring-3 {
+  inset: -10%;
+  border-color: rgba(126, 176, 255, 0.07);
+  animation: atlas-spin 60s linear infinite;
+}
+
+@keyframes atlas-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.logo-float {
+  animation: atlas-float 7s ease-in-out infinite;
+}
+
+@keyframes atlas-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes atlas-ping-kf {
+  75%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.atlas-ping {
+  animation: atlas-ping-kf 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.composer-shell {
+  position: relative;
+  max-width: 36rem;
+}
+
+.composer-shell::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 1.05rem;
+  padding: 1px;
+  background: conic-gradient(from var(--atlas-angle, 0deg), transparent 0deg, rgba(126, 176, 255, 0.7) 60deg, transparent 140deg);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: atlas-border 6s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@property --atlas-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes atlas-border {
+  to {
+    --atlas-angle: 360deg;
+  }
+}
+
+.landing-section {
+  padding-block: 5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@media (min-width: 640px) {
+  .landing-section {
+    padding-block: 7.5rem;
+  }
+}
+
+.card-surface {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #070c15 0%, #04080f 100%);
+  transition: background-color 200ms ease;
+}
+
+.card-sheen {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(300px 160px at 20% 0%, rgba(126, 176, 255, 0.12), transparent 70%);
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+.card-surface:hover .card-sheen {
+  opacity: 1;
+}
+
+.agent-rail {
+  background: linear-gradient(to bottom, transparent, rgba(126, 176, 255, 0.5), transparent);
+}
+
+.privacy-panel {
+  background:
+    radial-gradient(60% 80% at 100% 0%, rgba(48, 104, 255, 0.18), transparent 60%),
+    linear-gradient(180deg, #060b14, #03060c);
+}
+
+/* Reveal-on-scroll: content is visible by default; only hidden once JS arms it. */
+.reveal[data-armed="true"] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 600ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.reveal[data-armed="true"][data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal[data-armed="true"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .text-gradient,
+  .hero-aurora,
+  .orbit-ring,
+  .logo-float,
+  .composer-shell::before {
+    animation: none !important;
+  }
+}
+
+/* ---------- Side navigation (3D drop-down, top left under the logo) ---------- */
+
+.side-nav {
+  position: fixed;
+  top: 4.25rem;
+  left: 0;
+  z-index: 40;
+  perspective: 900px;
+  perspective-origin: top left;
+}
+
+.side-nav-handle {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(2, 5px);
+  gap: 5px;
+  place-content: center;
+  height: 44px;
+  width: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 0;
+  border-radius: 0 12px 12px 0;
+  background: rgba(10, 16, 28, 0.8);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition:
+    background 200ms ease,
+    border-color 200ms ease,
+    transform 200ms ease;
+}
+
+.side-nav-handle:hover,
+.side-nav-handle:focus-visible {
+  border-color: rgba(126, 176, 255, 0.45);
+}
+
+.side-nav-handle span {
+  height: 5px;
+  width: 5px;
+  border-radius: 9999px;
+  background: #7eb0ff;
+  box-shadow: 0 0 6px rgba(126, 176, 255, 0.9);
+  transition: transform 300ms ease;
+}
+
+/* The panel sits directly under the handle. Its top padding is an invisible
+   bridge so the pointer never leaves the menu while moving down to it. */
+.side-nav-panel {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  padding-top: 0.5rem;
+  width: 13rem;
+  transform-origin: top left;
+  transform: rotateX(-70deg) translateY(-8px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    transform 420ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    opacity 250ms ease,
+    visibility 0s linear 420ms;
+}
+
+.side-nav-card {
+  padding: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 0;
+  border-radius: 0 1rem 1rem 0;
+  background: linear-gradient(160deg, rgba(18, 28, 48, 0.94), rgba(5, 9, 17, 0.96));
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 30px 80px -20px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(126, 176, 255, 0.06) inset,
+    0 24px 60px -30px rgba(48, 104, 255, 0.45);
+}
+
+.side-nav-item {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 260ms ease,
+    transform 260ms ease;
+}
+
+.side-nav[data-open="true"] .side-nav-panel {
+  transform: rotateX(0deg) translateY(0);
+  opacity: 1;
+  visibility: visible;
+  transition:
+    transform 420ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    opacity 250ms ease,
+    visibility 0s;
+}
+
+.side-nav[data-open="true"] .side-nav-item {
+  opacity: 1;
+  transform: none;
+}
+
+.side-nav[data-open="true"] .side-nav-handle {
+  background: rgba(126, 176, 255, 0.18);
+  border-color: rgba(126, 176, 255, 0.45);
+}
+
+.side-nav[data-open="true"] .side-nav-handle span {
+  transform: scale(1.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .side-nav-panel,
+  .side-nav-item,
+  .side-nav-handle {
+    transition: none !important;
+  }
+}
+
+/* ---------- Benchmark carousel ---------- */
+
+.bench-track {
+  display: flex;
+  transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bench-track {
+    transition: none;
+  }
+}
+
+/* Result screen: editorial reading rhythm. */
+.atlas-prose {
+  font-size: 1.0625rem;
+  line-height: 1.75rem;
+  color: color-mix(in srgb, var(--foreground) 92%, transparent);
+  overflow-wrap: anywhere;
+}
+
+/* Active source: a left rule plus tint, so selection is not signalled by colour alone. */
+.source-item {
+  position: relative;
+}
+
+.source-item.source-active::before {
+  content: "";
+  position: absolute;
+  left: -1rem;
+  top: 1.25rem;
+  bottom: 1.25rem;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--foreground);
+}
+
+.source-item.source-active:first-child::before {
+  top: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .source-item.source-active {
+    animation: atlas-source-in 900ms ease-out;
+  }
+}
+
+@keyframes atlas-source-in {
+  from {
+    background: var(--source);
+  }
+  to {
+    background: transparent;
+  }
+}

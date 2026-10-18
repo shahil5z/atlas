@@ -1,0 +1,30 @@
+[
+ {
+  "pageNumber": 1,
+  "text": "CIL MT (System) - Professional 20 Day Roadmap\nBalanced study plan covering the complete System Discipline syllabus in 20 days.\nDaily Routine\n• Study: 5-6 Hours\n• MCQs: 50-100\n• Revision: 30-60 Minutes\nDAY 1\nHard Topic\n• DBMS\n• ER Model\n• Keys\n• Integrity Constraints\n• Relational Model\nEasy Topic\n• C Programming Basics\n• Variables\n• Data Types\n• Operators\nDAY 2\nHard Topic\n• DBMS\n• Relational Algebra\n• SQL Commands\n• Joins\n• Nested Queries\nEasy Topic\n• Functions\n• Recursion\nDAY 3\nHard Topic\n• DBMS\n• Functional Dependency\n• 1NF\n• 2NF\n• 3NF\n• BCNF\nEasy Topic\n• Arrays\n• Array Operations"
+ },
+ {
+  "pageNumber": 2,
+  "text": "DAY 4\nHard Topic\n• DBMS\n• Transactions\n• ACID Properties\n• Concurrency Control\n• Serializability\nEasy Topic\n• Stack\n• Queue\nDAY 5\nHard Topic\n• Operating System\n• System Calls\n• Processes\n• Process States\n• Threads\nEasy Topic\n• Linked List\n• Types of Linked Lists\nDAY 6\nHard Topic\n• Operating System\n• IPC\n• Critical Section\n• Synchronization\n• Semaphores\n• Mutex\nEasy Topic\n• Trees\n• Binary Trees\nDAY 7\nHard Topic\n• Operating System\n• Deadlock\n• Deadlock Prevention\n• Deadlock Avoidance\n• CPU Scheduling\nEasy Topic\n• Binary Search Tree (BST)\nDAY 8"
+ },
+ {
+  "pageNumber": 3,
+  "text": "Hard Topic\n• Operating System\n• Memory Management\n• Paging\n• Segmentation\n• Virtual Memory\n• File System\nEasy Topic\n• Heap\n• Priority Queue\nDAY 9\nHard Topic\n• Computer Networks\n• OSI Model\n• TCP/IP Model\n• Network Devices\n• Encapsulation\nEasy Topic\n• Graph Basics\n• Graph Representation\nDAY 10\nHard Topic\n• Computer Networks\n• IPv4\n• Subnetting\n• CIDR Notation\n• Address Classes\nEasy Topic\n• Linear Search\n• Binary Search\nDAY 11\nHard Topic\n• Computer Networks\n• ARP\n• DHCP\n• ICMP\n• NAT\nEasy Topic\n• Bubble Sort\n• Selection Sort\n• Insertion Sort\nDAY 12"
+ },
+ {
+  "pageNumber": 4,
+  "text": "Hard Topic\n• Computer Networks\n• TCP\n• UDP\n• Flow Control\n• Congestion Control\n• Socket Basics\nEasy Topic\n• Hashing\n• Collision Handling\nDAY 13\nHard Topic\n• Computer Networks\n• DNS\n• HTTP\n• SMTP\n• FTP\n• Email Protocols\nEasy Topic\n• Time Complexity\n• Big O\n• Big Ω\n• Big Θ\nDAY 14\nHard Topic\n• Algorithms\n• Greedy Method\n• Dynamic Programming\n• Recursion Tree Analysis\nEasy Topic\n• Boolean Algebra\n• Logic Gates\nDAY 15\nHard Topic\n• Algorithms\n• Divide & Conquer\n• Minimum Spanning Tree\n• Dijkstra Algorithm\n• Shortest Path Algorithms\nEasy Topic\n• Number Systems\n• Binary Arithmetic\n• Floating Point Representation"
+ },
+ {
+  "pageNumber": 5,
+  "text": "DAY 16\nHard Topic\n• Computer Organization & Architecture\n• Machine Instructions\n• Instruction Format\n• Addressing Modes\n• ALU\nEasy Topic\n• K-Map\n• Logic Simplification\nDAY 17\nHard Topic\n• Computer Organization & Architecture\n• Datapath\n• Control Unit\n• Pipelining\n• Pipeline Hazards\n• Cache Memory\n• DMA\n• Interrupts\nEasy Topic\n• Encoder\n• Decoder\n• Multiplexer\n• Demultiplexer\nDAY 18\nHard Topic\n• Theory of Computation\n• Regular Expressions\n• DFA\n• NFA\n• Regular Languages\n• Finite Automata\nEasy Topic\n• Flip-Flops\n• Registers\n• Counters\nDAY 19\nHard Topic\n• Theory of Computation\n• Context Free Grammar (CFG)\n• Push Down Automata (PDA)\n• Pumping Lemma\n• Turing Machine"
+ },
+ {
+  "pageNumber": 6,
+  "text": "• Undecidability\nEasy Topic\n• Compiler Design\n• Lexical Analysis\n• Parsing\n• Syntax Directed Translation\n• Intermediate Code Generation\nDAY 20\nHard Topic\n• Engineering Mathematics\n• Discrete Mathematics\n• Probability\n• Statistics\n• Graph Theory\n• Combinatorics\n• Conditional Probability\n• Bayes Theorem\nEasy Topic\n• Compiler Design\n• Runtime Environment\n• Code Optimization\n• Data Flow Analysis\n• Constant Propagation\n• Liveness Analysis\n• Common Subexpression Elimination"
+ },
+ {
+  "pageNumber": 7,
+  "text": "Revision Priority\nPriority 1\n• DBMS\n• Operating System\n• Computer Networks\nPriority 2\n• Data Structures\n• Algorithms\nPriority 3\n• Computer Organization & Architecture\n• Digital Logic\nPriority 4\n• Theory of Computation\n• Compiler Design\nPriority 5\n• Engineering Mathematics"
+ }
+]
