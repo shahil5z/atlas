@@ -26,7 +26,7 @@ const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Atlas | Autonomous Research Agent",
+  title: "Atlas",
   description:
     "Privacy-first autonomous research agent that runs entirely in your browser. Research questions, analyze documents, and build evidence-backed answers.",
   applicationName: "Atlas",
