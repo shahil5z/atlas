@@ -119,9 +119,9 @@ function Slide({ run, position, count, active }: { run: BenchmarkRun; position: 
       aria-hidden={!active}
       inert={!active}
       data-active={active}
-      className="bench-slide grid min-w-0 gap-6 p-4 [grid-area:1/1] sm:p-6 xl:grid-cols-[minmax(0,734px)_minmax(0,1fr)] xl:gap-8"
+      className="bench-slide grid min-w-0 gap-6 p-4 [grid-area:1/1] sm:p-6 xl:grid-cols-[minmax(0,600px)_minmax(0,1fr)] xl:gap-8"
     >
-      {/* The original PNG, never wider than its natural size so every word stays sharp. */}
+      {/* The original PNG, scaled down proportionally (never cropped) to a 600px frame. */}
       <div className="min-w-0 self-start">
         <a
           href={shot.src}
@@ -137,7 +137,7 @@ function Slide({ run, position, count, active }: { run: BenchmarkRun; position: 
             alt={`Atlas answer screen for “${run.question}” on ${run.document}, ${run.pages}. Sections: ${run.sections.join("; ")}.`}
             width={shot.width}
             height={shot.height}
-            style={{ width: "100%", maxWidth: shot.width, height: "auto" }}
+            style={{ width: "100%", maxWidth: Math.min(shot.width, 600), height: "auto" }}
             className="block"
           />
           <span className="pointer-events-none absolute right-3 top-3 rounded-full border border-white/10 bg-black/70 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-white/80 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none">
