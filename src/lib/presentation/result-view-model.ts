@@ -177,7 +177,7 @@ export function buildResultViewModel(session: ResearchSession): ResearchResultVi
       citationsUsed: sources.length,
       totalMs: runMs === null && prepMs === 0 ? null : (runMs ?? 0) + prepMs,
       system: {
-        model: modelLabel(LOCAL_LLM_CONFIG.modelId),
+        model: answer?.provider === "openai" ? "OpenAI" : modelLabel(LOCAL_LLM_CONFIG.modelId),
         embeddings: modelLabel(EMBEDDING_MODEL_ID),
         runtime: session.embedding ? (session.embedding.device === "webgpu" ? "WebGPU" : "WASM") : "Browser",
       },

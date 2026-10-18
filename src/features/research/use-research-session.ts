@@ -5,7 +5,8 @@ import { languageModelFromEngine } from "@/lib/llm/adapter";
 import { disposeLlmEngine, initializeLlmEngine } from "@/lib/llm/llm-client";
 import { isResearchCancelled } from "@/lib/llm/cancelled";
 import { runResearch } from "@/lib/agents/orchestrator";
-import type { AgentEvent, LanguageModel } from "@/lib/agents/types";
+import type { AgentEvent, LanguageModel, ResearchRunMetrics } from "@/lib/agents/types";
+import { requestHostedAnswer } from "@/lib/openai/hosted-answer";
 import { prepareDocument } from "@/lib/documents/prepare-document";
 import { validatePdfFile } from "@/lib/documents/validate-pdf-file";
 import {
@@ -47,6 +48,24 @@ interface PreparedDocument {
   extraction: ExtractionAssessment;
   metrics: PipelineMetrics;
   embedding: EmbeddingDescriptor | null;
+}
+
+function hostedRunMetrics(totalMs: number, citations: number): ResearchRunMetrics {
+  return {
+    totalMs,
+    modelInitMs: null,
+    planningMs: null,
+    retrievalMs: null,
+    analysisMs: null,
+    critiqueMs: null,
+    synthesisMs: totalMs,
+    iterations: 0,
+    toolCalls: 0,
+    generatedTokens: null,
+    firstTokenMs: null,
+    retrievedChunks: citations,
+    contextTokenEstimate: null,
+  };
 }
 
 function stageFor(event: AgentEvent): ResearchStage | null {
@@ -152,6 +171,7 @@ export function useResearchSession() {
     };
 
     let prepared: PreparedDocument | null = null;
+    let hostedChecked = false;
     if (attachment && preparedRef.current?.file === attachment.file && getResearchIndex().size() > 0) {
       prepared = preparedRef.current;
     } else if (attachment) {
@@ -184,6 +204,34 @@ export function useResearchSession() {
       metrics.chunkMs = result.timings.chunkMs;
       const detail = { pageCount: result.document.pageCount, chunkCount: result.chunks.length };
       setPhase("loading_model", detail);
+      const hostedStarted = performance.now();
+      const hosted = await requestHostedAnswer({
+        query,
+        document: { id: result.document.id, name: result.document.name },
+        chunks: result.chunks,
+        signal: controller.signal,
+      });
+      hostedChecked = true;
+      if (leaveIfStopped()) return;
+      if (hosted) {
+        dispatch({
+          type: "session_ready",
+          session: createResearchSession({
+            ...createIdentity(),
+            query,
+            document: result.document,
+            chunks: result.chunks,
+            extraction: result.extraction,
+            metrics,
+            embedding: null,
+            sourceFile: attachment.file,
+            answer: hosted,
+            trace: [],
+            runMetrics: hostedRunMetrics(performance.now() - hostedStarted, hosted.citations.length),
+          }),
+        });
+        return;
+      }
       try {
         let lastPercent = -1;
         const initStarted = performance.now();
@@ -280,6 +328,35 @@ export function useResearchSession() {
       };
       const researchStarted = performance.now();
       if (leaveIfStopped()) return;
+
+      if (!hostedChecked) {
+        const hosted = await requestHostedAnswer({
+          query,
+          document: prepared ? { id: prepared.document.id, name: prepared.document.name } : null,
+          chunks: prepared?.chunks ?? [],
+          signal: controller.signal,
+        });
+        if (leaveIfStopped()) return;
+        if (hosted) {
+          dispatch({
+            type: "session_ready",
+            session: createResearchSession({
+              ...createIdentity(),
+              query,
+              document: prepared?.document ?? null,
+              chunks: prepared?.chunks ?? [],
+              extraction: prepared?.extraction ?? null,
+              metrics: prepared?.metrics ?? emptyMetrics(),
+              embedding: prepared?.embedding ?? null,
+              sourceFile: attachment?.file ?? null,
+              answer: hosted,
+              trace: [],
+              runMetrics: hostedRunMetrics(performance.now() - researchStarted, hosted.citations.length),
+            }),
+          });
+          return;
+        }
+      }
 
       const run = await runResearch({
         runId: crypto.randomUUID(),

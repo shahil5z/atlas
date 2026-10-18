@@ -87,7 +87,7 @@ export function ResearchWorkspace({ session, onReset }: { session: ResearchSessi
           {view.process.passagesRetrieved > 0 ? <Row label="Passages retrieved" value={String(view.process.passagesRetrieved)} /> : null}
           {view.process.citationsUsed > 0 ? <Row label="Citations used" value={String(view.process.citationsUsed)} /> : null}
           {view.process.totalMs !== null ? <Row label="Total time" value={formatDuration(view.process.totalMs)} /> : null}
-          <Row label="Processing" value="Locally, in this browser" />
+          <Row label="Processing" value={view.process.system.model === "OpenAI" ? "OpenAI, with the local model as fallback" : "Locally, in this browser"} />
         </dl>
         <details className="mt-5">
           <summary className="min-h-8 cursor-pointer text-xs uppercase tracking-[0.14em] hover:text-foreground">System details</summary>
@@ -96,7 +96,11 @@ export function ResearchWorkspace({ session, onReset }: { session: ResearchSessi
             <Row label="Embeddings" value={view.process.system.embeddings} />
             <Row label="Runtime" value={view.process.system.runtime} />
           </dl>
-          <p className="mt-3 text-xs leading-5">Speed depends on this device. Atlas does not claim frontier-model quality.</p>
+          <p className="mt-3 text-xs leading-5">
+            {view.process.system.model === "OpenAI"
+              ? "OpenAI writes the answer from the extracted text. If that call fails, Atlas uses the local model."
+              : "Speed depends on this device. Atlas does not claim frontier-model quality."}
+          </p>
         </details>
       </details>
     </div>

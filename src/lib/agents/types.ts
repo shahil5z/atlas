@@ -80,6 +80,8 @@ export interface ResearchAnswer {
   knowledgeSource: "document" | "model";
   termination: TerminationReason;
   structured?: StructuredAnswer;
+  /** Set when OpenAI wrote the answer. Absent on the local path. */
+  provider?: "openai" | "local";
 }
 
 export interface AgentRun {

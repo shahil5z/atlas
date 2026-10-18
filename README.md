@@ -6,7 +6,7 @@
 
 <p align="center">
   A privacy-first autonomous research agent that runs in the browser.<br>
-  Ask a question, attach any text PDF, and get a direct answer. The document never leaves the tab.
+  Ask a question, attach any text PDF, and get a direct answer.
 </p>
 
 <p align="center">
@@ -30,7 +30,7 @@
 
 Atlas reads a question, keeps the evidence that answers it, and writes a short reply. With a PDF attached, the answer comes from that file. Without one, the answer is labeled as the local model’s general knowledge.
 
-There is no account, no database, and no remote model API. Vercel serves the website. The browser downloads the model weights and does the research.
+There is no account and no database. When the server has an OpenAI key, Atlas sends the question and the extracted text to OpenAI and shows that reply. The key stays on the server. If OpenAI is missing, expired, or unavailable, Atlas answers with the local model instead. Vercel serves the website. The browser still downloads the local model weights for that fallback.
 
 ## Features
 
@@ -53,14 +53,11 @@ There is no account, no database, and no remote model API. Vercel serves the web
 
 ## Privacy
 
-Your PDF, question, chunks, vectors, and answer stay in the browser tab.
+The PDF file stays in the browser tab. Atlas does not write the question or the file to `localStorage`, `sessionStorage`, IndexedDB, or cookies. Refreshing or closing the page clears the research.
 
-- Nothing is written to `localStorage`, `sessionStorage`, IndexedDB, or cookies
-- Refreshing or closing the page clears the research
-- The document is not uploaded to Vercel, GitHub, or an AI API
-- The first run downloads model weights from Hugging Face. That download is the model, not your file
+With OpenAI configured, the question and the extracted page text are sent to OpenAI to write the answer. The API key is a server environment variable. It is not in the repository and not in the browser. If that request fails, nothing is sent and the local model answers from the tab.
 
-Do not read this as “nothing ever leaves the device.” The model files do. Your document does not.
+The first local run downloads model weights from Hugging Face. That download is the model, not your file.
 
 Details are in [docs/privacy.md](docs/privacy.md).
 
@@ -71,7 +68,7 @@ Details are in [docs/privacy.md](docs/privacy.md).
 - Model output is parsed with Zod. Citations that were not retrieved are removed
 - Answers are rendered as text, not HTML
 - The site sends `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, and a locked-down `Permissions-Policy`
-- No API keys, accounts, or personal documents belong in this repository
+- The OpenAI key is a server variable. The `env` file and `.env*` files stay out of git
 
 Uploaded PDFs and `.env` files are gitignored. Do not commit them.
 
@@ -127,7 +124,7 @@ npm run eval
 npm run build
 ```
 
-No environment variables and no API keys are required.
+The local path needs no environment variables. `OPENAI_API_KEY` is optional and is read only on the server. `OPENAI_MODEL` overrides the default model (`gpt-4.1-mini`).
 
 ## Deployment
 
@@ -135,8 +132,8 @@ The production site is [atlas-research-ruby.vercel.app](https://atlas-research-r
 
 1. Import this repository into Vercel.
 2. Framework preset: Next.js.
-3. Do not add an AI API key or a database.
-4. Deploy.
+3. Add `OPENAI_API_KEY` in the project environment if you want OpenAI answers. Do not commit the key.
+4. Deploy. Without the key, Atlas uses the local model.
 
 ## Project structure
 
