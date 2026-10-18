@@ -1,121 +1,67 @@
-// Generated from real Playwright runs in /workspace/atlas/bench. Do not edit by hand.
-export type BenchmarkRun = {
-  id: string;
-  /** answered, or did not finish: model error / hit the time cap. */
-  status: "answered" | "error" | "timed-out";
-  type: string;
-  question: string;
-  document: string;
-  summary: string;
-  /** Wall-clock ms from clicking submit until the answer rendered or the run was stopped. */
-  timeToAnswerMs: number;
-  citations: number;
-  passagesRetrieved: number;
-  pagesAnalyzed: number;
-  pagesCited: number[];
-  backend: string;
-  model: string;
-  screenshot: string;
+// Live tests the author ran on the deployed Atlas app on October 18, 2026.
+// Every value below is copied from the screenshots in public/benchmarks.
+// Edit these only when the screenshots change, and keep the text exactly as it appears.
+
+export type BenchmarkImage = {
+  src: string;
   width: number;
   height: number;
 };
 
-export const BENCHMARK_ENVIRONMENT = "Headless Chromium on an 8 vCPU cloud VM, no GPU. Measured October 2026.";
+export type BenchmarkStatusRow = {
+  label: string;
+  value: string;
+};
 
-const ALL_RUNS: BenchmarkRun[] = [
+export type BenchmarkRun = {
+  id: string;
+  /** The question as it was typed. */
+  question: string;
+  document: string;
+  pages: string;
+  /** Section headings visible in the answer screenshot. */
+  sections: string[];
+  /** Rows of the "How Atlas researched this" panel, in on-screen order. */
+  status: BenchmarkStatusRow[];
+  /** Full answer screen. Shown at no more than its natural size. */
+  screenshot: BenchmarkImage;
+  /** The original status panel. */
+  statusShot: BenchmarkImage;
+};
+
+export const BENCHMARK_ENVIRONMENT = "Live tests on the deployed app, October 2026.";
+
+export const BENCHMARK_RUNS: BenchmarkRun[] = [
   {
-    "id": "summary",
-    "status": "answered",
-    "type": "Summary",
-    "question": "Summarize this paper.",
-    "document": "mistral7b.pdf",
-    "summary": "Answered in about a minute with a page 1 citation.",
-    "timeToAnswerMs": 72325,
-    "citations": 1,
-    "passagesRetrieved": 1,
-    "pagesAnalyzed": 9,
-    "pagesCited": [
-      1
+    id: "live-1",
+    question: "what is the future of ai according to this pdf?",
+    document: "Impact of AI Until 2050.pdf",
+    pages: "13 pages",
+    sections: ["Economic and Job Market Impact", "Social, Ethical, and Cultural Implications"],
+    status: [
+      { label: "Pages analyzed", value: "13" },
+      { label: "Passages retrieved", value: "4" },
+      { label: "Citations used", value: "4" },
+      { label: "Total time", value: "5.44 s" },
+      { label: "Processing", value: "OpenAI, with the local model as fallback" },
     ],
-    "backend": "WASM",
-    "model": "SmolLM2-360M-Instruct",
-    "screenshot": "/benchmarks/summary.png",
-    "width": 2560,
-    "height": 3370
+    screenshot: { src: "/benchmarks/live-1.png", width: 707, height: 822 },
+    statusShot: { src: "/benchmarks/live-1-status.png", width: 472, height: 238 },
   },
   {
-    "id": "factual",
-    "status": "error",
-    "type": "Factual lookup",
-    "question": "What sliding window size does Mistral 7B use?",
-    "document": "mistral7b.pdf",
-    "summary": "Stopped at evidence search: the WebGPU device (SwiftShader) lacks f16, so the model errored.",
-    "timeToAnswerMs": 2400129,
-    "citations": 0,
-    "passagesRetrieved": 0,
-    "pagesAnalyzed": 0,
-    "pagesCited": [],
-    "backend": "WebGPU",
-    "model": "",
-    "screenshot": "/benchmarks/factual.png",
-    "width": 2560,
-    "height": 1800
+    id: "live-2",
+    question: "what is the pdf about?",
+    document: "Crack.pdf",
+    pages: "37 pages",
+    sections: ["Transformer Architecture and Implementation", "Retrieval-Augmented Generation (RAG) Systems"],
+    status: [
+      { label: "Pages analyzed", value: "37" },
+      { label: "Passages retrieved", value: "5" },
+      { label: "Citations used", value: "5" },
+      { label: "Total time", value: "7.00 s" },
+      { label: "Processing", value: "OpenAI, with the local model as fallback" },
+    ],
+    screenshot: { src: "/benchmarks/live-2.png", width: 732, height: 812 },
+    statusShot: { src: "/benchmarks/live-2-status.png", width: 456, height: 196 },
   },
-  {
-    "id": "comparison",
-    "status": "timed-out",
-    "type": "Comparison",
-    "question": "How does LLaMA-13B compare to GPT-3?",
-    "document": "llama.pdf",
-    "summary": "Still searching for evidence when the 12 minute cap hit. CPU-only WASM is too slow here.",
-    "timeToAnswerMs": 720048,
-    "citations": 0,
-    "passagesRetrieved": 0,
-    "pagesAnalyzed": 0,
-    "pagesCited": [],
-    "backend": "WASM",
-    "model": "",
-    "screenshot": "/benchmarks/comparison.png",
-    "width": 2560,
-    "height": 1800
-  },
-  {
-    "id": "numeric",
-    "status": "timed-out",
-    "type": "Numeric extraction",
-    "question": "How many layers and attention heads does Mistral 7B have?",
-    "document": "mistral7b.pdf",
-    "summary": "Still searching for evidence when the 12 minute cap hit.",
-    "timeToAnswerMs": 1064328,
-    "citations": 0,
-    "passagesRetrieved": 0,
-    "pagesAnalyzed": 0,
-    "pagesCited": [],
-    "backend": "WASM",
-    "model": "",
-    "screenshot": "/benchmarks/numeric.png",
-    "width": 2560,
-    "height": 1800
-  },
-  {
-    "id": "multihop",
-    "status": "timed-out",
-    "type": "Multi-hop",
-    "question": "How do sliding window attention and the rolling buffer cache together reduce memory use?",
-    "document": "mistral7b.pdf",
-    "summary": "Still searching for evidence when the 12 minute cap hit.",
-    "timeToAnswerMs": 779888,
-    "citations": 0,
-    "passagesRetrieved": 0,
-    "pagesAnalyzed": 0,
-    "pagesCited": [],
-    "backend": "WASM",
-    "model": "",
-    "screenshot": "/benchmarks/multihop.png",
-    "width": 2560,
-    "height": 1800
-  }
 ];
-
-/** Only runs that produced a real, completed answer are shown. */
-export const BENCHMARK_RUNS: BenchmarkRun[] = ALL_RUNS.filter((run) => run.status === "answered");
