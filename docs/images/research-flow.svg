@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="268" viewBox="0 0 980 268" role="img" aria-label="Atlas research flow">
+<title>Atlas research flow</title>
+<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7eb0ff"/></marker>
+<marker id="g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9aa7bb"/></marker></defs>
+<rect width="980" height="268" rx="16" fill="#0a0f1a"/>
+<g font-family="-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,&quot;Noto Sans&quot;,Helvetica,Arial,sans-serif">
+<text x="490.0" y="32" text-anchor="middle" font-size="17" font-weight="600" fill="#e6edf7">How Atlas answers a question</text>
+<path d="M333.0 72V64H809.0V72" fill="none" stroke="#3d4d68" stroke-width="1.5"/>
+<text x="571.0" y="57" text-anchor="middle" font-size="13" fill="#a9bbd6">Local path, runs in the browser tab</text>
+<rect x="13.0" y="80" width="144" height="66" rx="10" fill="#14233d" stroke="#7eb0ff" stroke-opacity="1" stroke-width="1.5"/>
+<text class="t" x="85.0" y="109" text-anchor="middle" font-size="14" font-weight="600" fill="#f3f6fb">Question + PDF</text>
+<text class="s" x="85.0" y="129" text-anchor="middle" font-size="12" fill="#a9bbd6">asked in the browser</text>
+<line x1="159.0" y1="113.0" x2="173.0" y2="113.0" stroke="#7eb0ff" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="175.0" y="80" width="144" height="66" rx="10" fill="#111a2b" stroke="#7eb0ff" stroke-opacity="0.6" stroke-width="1.5"/>
+<text class="t" x="247.0" y="109" text-anchor="middle" font-size="14" font-weight="600" fill="#f3f6fb">Parse + Chunk</text>
+<text class="s" x="247.0" y="129" text-anchor="middle" font-size="12" fill="#a9bbd6">PDF.js, page by page</text>
+<line x1="321.0" y1="113.0" x2="335.0" y2="113.0" stroke="#7eb0ff" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="337.0" y="80" width="144" height="66" rx="10" fill="#111a2b" stroke="#7eb0ff" stroke-opacity="0.6" stroke-width="1.5"/>
+<text class="t" x="409.0" y="109" text-anchor="middle" font-size="14" font-weight="600" fill="#f3f6fb">Retrieve evidence</text>
+<text class="s" x="409.0" y="129" text-anchor="middle" font-size="12" fill="#a9bbd6">vectors + keywords</text>
+<line x1="483.0" y1="113.0" x2="497.0" y2="113.0" stroke="#7eb0ff" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="499.0" y="80" width="144" height="66" rx="10" fill="#111a2b" stroke="#7eb0ff" stroke-opacity="0.6" stroke-width="1.5"/>
+<text class="t" x="571.0" y="109" text-anchor="middle" font-size="14" font-weight="600" fill="#f3f6fb">Research / Analyze</text>
+<text class="s" x="571.0" y="129" text-anchor="middle" font-size="12" fill="#a9bbd6">local agent loop</text>
+<line x1="645.0" y1="113.0" x2="659.0" y2="113.0" stroke="#7eb0ff" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="661.0" y="80" width="144" height="66" rx="10" fill="#111a2b" stroke="#7eb0ff" stroke-opacity="0.6" stroke-width="1.5"/>
+<text class="t" x="733.0" y="109" text-anchor="middle" font-size="14" font-weight="600" fill="#f3f6fb">Validate citations</text>
+<text class="s" x="733.0" y="129" text-anchor="middle" font-size="12" fill="#a9bbd6">drop unmatched ones</text>
+<line x1="807.0" y1="113.0" x2="821.0" y2="113.0" stroke="#7eb0ff" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="823.0" y="80" width="144" height="66" rx="10" fill="#14233d" stroke="#7eb0ff" stroke-opacity="1" stroke-width="1.5"/>
+<text class="t" x="895.0" y="109" text-anchor="middle" font-size="14" font-weight="600" fill="#f3f6fb">Answer</text>
+<text class="s" x="895.0" y="129" text-anchor="middle" font-size="12" fill="#a9bbd6">summary + citations</text>
+<path d="M247.0 148V194H895.0V150" fill="none" stroke="#9aa7bb" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#g)"/>
+<rect x="371.0" y="179" width="400" height="30" rx="15" fill="#0a0f1a" stroke="#3d4d68" stroke-width="1.2"/>
+<text x="571.0" y="199" text-anchor="middle" font-size="13" fill="#dbe3ee">Optional: OpenAI via the server route /api/answer</text>
+<text x="490.0" y="248" text-anchor="middle" font-size="12.5" fill="#94a3b8">Tried first only when the server has an OpenAI key. If it is not set or fails, the local path answers.</text>
+</g></svg>
