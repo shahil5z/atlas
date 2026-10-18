@@ -5,17 +5,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Reveal } from "@/components/landing/reveal";
 import { BENCHMARK_ENVIRONMENT, BENCHMARK_RUNS, type BenchmarkRun } from "@/content/benchmarks";
 
-const INTERVAL_MS = 4000;
+const INTERVAL_MS = 5000;
 
 export function BenchmarkSection() {
   const [index, setIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
-  const [stopped, setStopped] = useState(false);
   const [reduced, setReduced] = useState(false);
   const region = useRef<HTMLDivElement>(null);
   const count = BENCHMARK_RUNS.length;
-  const rotating = count > 1 && !reduced && !stopped && !hovered && !focused;
+  const rotating = count > 1 && !reduced && !hovered && !focused;
 
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -25,7 +24,7 @@ export function BenchmarkSection() {
     return () => query.removeEventListener("change", update);
   }, []);
 
-  // A timeout keyed on the index restarts the 4 s wait after any manual change.
+  // A timeout keyed on the index restarts the 5 s wait after any manual change.
   useEffect(() => {
     if (!rotating) return;
     const timer = window.setTimeout(() => setIndex((value) => (value + 1) % count), INTERVAL_MS);
@@ -91,16 +90,6 @@ export function BenchmarkSection() {
                 ))}
               </div>
               <div className="flex gap-2">
-                {!reduced && (
-                  <button
-                    type="button"
-                    onClick={() => setStopped((value) => !value)}
-                    aria-label={stopped ? "Play slideshow" : "Pause slideshow"}
-                    className="flex h-10 min-w-10 items-center justify-center rounded-full border border-white/10 px-3 font-mono text-xs text-muted-foreground hover:bg-white/[0.06] hover:text-foreground"
-                  >
-                    {stopped ? "Play" : "Pause"}
-                  </button>
-                )}
                 <button type="button" onClick={() => go(index - 1)} aria-label="Previous live test" className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 hover:bg-white/[0.06]">
                   <span aria-hidden="true">←</span>
                 </button>
