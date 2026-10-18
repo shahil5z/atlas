@@ -11,13 +11,13 @@
 
 <p align="center">
   <a href="https://github.com/shahil5z/atlas"><img src="https://img.shields.io/badge/source-GitHub-111111" alt="Source"></a>
-  <a href="https://atlas-research.vercel.app"><img src="https://img.shields.io/badge/website-atlas--research.vercel.app-111111" alt="Website"></a>
+  <a href="https://atlas-research-ruby.vercel.app"><img src="https://img.shields.io/badge/website-atlas--research--ruby.vercel.app-111111" alt="Website"></a>
   <img src="https://img.shields.io/badge/runtime-browser-02050b" alt="Runs in the browser">
   <img src="https://img.shields.io/badge/account-none-02050b" alt="No account">
 </p>
 
 <p align="center">
-  <b><a href="https://atlas-research.vercel.app">Open Atlas</a></b>
+  <b><a href="https://atlas-research-ruby.vercel.app">Open Atlas</a></b>
   &nbsp;|&nbsp;
   <a href="https://github.com/shahil5z/atlas">Source</a>
   &nbsp;|&nbsp;
@@ -131,7 +131,7 @@ No environment variables and no API keys are required.
 
 ## Deployment
 
-The production site is [atlas-research.vercel.app](https://atlas-research.vercel.app).
+The production site is [atlas-research-ruby.vercel.app](https://atlas-research-ruby.vercel.app).
 
 1. Import this repository into Vercel.
 2. Framework preset: Next.js.
