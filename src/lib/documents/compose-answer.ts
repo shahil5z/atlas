@@ -175,7 +175,7 @@ function answerForType(
 /** A direct reply for any document when the question names something in the text. */
 function focusedAnswer(query: string, pages: readonly PageText[], sources: SourceRegistry): Draft | null {
   const asked = contentWords(query);
-  if (asked.size === 0) return null;
+  if (asked.length === 0) return null;
   const hits: { text: string; pageNumber: number; overlap: number }[] = [];
   for (const page of pages) {
     for (const sentence of cleanSentences(page.text)) {
