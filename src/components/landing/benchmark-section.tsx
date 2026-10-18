@@ -149,7 +149,7 @@ function Slide({ run, position, count, active }: { run: BenchmarkRun; position: 
 
       <div className="flex min-w-0 flex-col">
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#7eb0ff]">
-          {String(position + 1).padStart(2, "0")} · Live test
+          {String(position + 1).padStart(2, "0")} · Live test · {run.engine}
         </p>
         <h3 className="mt-3 text-xl font-medium leading-snug tracking-tight sm:text-2xl">“{run.question}”</h3>
         <p className="mt-2 flex min-w-0 flex-wrap items-center gap-x-2 text-sm text-muted-foreground">

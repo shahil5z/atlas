@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { AtlasLogo } from "@/components/brand/logo";
 
-const pills = ["Runs in your browser", "No account", "No API key"];
+const pills = ["Browser-local fallback", "No account required", "No research history"];
 
 export function LandingHero({ children, below }: { children: ReactNode; below?: ReactNode }) {
   return (
@@ -15,11 +15,11 @@ export function LandingHero({ children, below }: { children: ReactNode; below?: 
             <span className="sr-only">Atlas. </span>
             Private research,
             <br />
-            <span className="text-gradient">powered locally.</span>
+            <span className="text-gradient">local-first.</span>
           </h1>
 
           <p className="mt-6 max-w-lg text-pretty text-lg leading-8 text-muted-foreground">
-            Ask a question, attach a PDF, get an answer with page citations.
+            Ask a question, attach a PDF, and get a concise, cited answer.
           </p>
 
           <ul className="mt-6 flex flex-wrap gap-2" aria-label="Highlights">

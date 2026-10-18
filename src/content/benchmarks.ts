@@ -21,6 +21,8 @@ export type BenchmarkRun = {
   pages: string;
   /** Section headings visible in the answer screenshot. */
   sections: string[];
+  /** Which answer path produced this run. Shown on the slide so it is not read as browser-local speed. */
+  engine: string;
   /** Rows of the "How Atlas researched this" panel, in on-screen order. */
   status: BenchmarkStatusRow[];
   /** Full answer screen. Shown at no more than its natural size. */
@@ -37,6 +39,7 @@ export const BENCHMARK_RUNS: BenchmarkRun[] = [
     question: "what is the future of ai according to this pdf?",
     document: "Impact of AI Until 2050.pdf",
     pages: "13 pages",
+    engine: "Hosted OpenAI path",
     sections: ["Economic and Job Market Impact", "Social, Ethical, and Cultural Implications"],
     status: [
       { label: "Pages analyzed", value: "13" },
@@ -53,6 +56,7 @@ export const BENCHMARK_RUNS: BenchmarkRun[] = [
     question: "what is the pdf about?",
     document: "Crack.pdf",
     pages: "37 pages",
+    engine: "Hosted OpenAI path",
     sections: ["Transformer Architecture and Implementation", "Retrieval-Augmented Generation (RAG) Systems"],
     status: [
       { label: "Pages analyzed", value: "37" },

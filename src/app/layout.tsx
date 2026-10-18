@@ -28,12 +28,12 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Atlas",
   description:
-    "Privacy-first autonomous research agent that runs entirely in your browser. Research questions, analyze documents, and build evidence-backed answers.",
+    "Privacy-first, local-first research agent. Research questions, analyze documents, and build evidence-backed answers with citations.",
   applicationName: "Atlas",
   openGraph: {
     title: "Atlas | Autonomous Research Agent",
     description:
-      "Research questions. Analyze documents. Build evidence-backed answers. Local to the browser. No account.",
+      "Research questions. Analyze documents. Build evidence-backed answers. Local-first. No account.",
     type: "website",
     siteName: "Atlas",
     images: [{ url: "/atlas-logo.jpg", width: 720, height: 720, alt: "Atlas" }],

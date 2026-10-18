@@ -54,7 +54,7 @@ export function ResearchWorkspace({ session, onReset }: { session: ResearchSessi
         </h2>
         {answer?.fromModelKnowledge ? (
           <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
-            From the local model&rsquo;s general knowledge · no document used
+            {view.process.system.model === "OpenAI" ? "From OpenAI’s general knowledge" : "From the local model’s general knowledge"} · no document used
           </p>
         ) : null}
         {!answer ? (
@@ -93,8 +93,8 @@ export function ResearchWorkspace({ session, onReset }: { session: ResearchSessi
           <summary className="min-h-8 cursor-pointer text-xs uppercase tracking-[0.14em] hover:text-foreground">System details</summary>
           <dl className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] gap-x-6 gap-y-2 sm:max-w-sm">
             <Row label="Model" value={view.process.system.model} />
-            <Row label="Embeddings" value={view.process.system.embeddings} />
-            <Row label="Runtime" value={view.process.system.runtime} />
+            {view.process.system.model === "OpenAI" ? null : <Row label="Embeddings" value={view.process.system.embeddings} />}
+            <Row label="Runtime" value={view.process.system.model === "OpenAI" ? "Hosted" : view.process.system.runtime} />
           </dl>
           <p className="mt-3 text-xs leading-5">
             {view.process.system.model === "OpenAI"

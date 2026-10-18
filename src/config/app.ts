@@ -5,12 +5,12 @@ export const APP_TAGLINE = "Autonomous Research Agent";
 export const APP_DESCRIPTION = "Research questions. Analyze documents. Build evidence-backed answers.";
 
 export const APP_SUMMARY =
-  "Privacy-first autonomous research agent that runs entirely in your browser.";
+  "Privacy-first research agent with local-first inference in your browser.";
 
 export const QUERY_PLACEHOLDER = "What do you want to research?";
 
 export const PRIVACY_BODY =
-  "Private by architecture. No account required. Your research session is processed locally in this browser and cleared when you refresh or close the page. The first run may download the local models.";
+  "No account, research history, or stored documents. Sessions live in memory and clear on refresh or close. Local inference keeps research in the browser. With hosted inference enabled, your question, file name, and extracted text are processed through OpenAI on the server.";
 
 /** Research questions stay in memory only. This limit is a UI guard, not storage. */
 export const MAX_QUERY_LENGTH = 4_000;

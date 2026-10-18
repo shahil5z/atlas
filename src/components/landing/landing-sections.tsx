@@ -1,6 +1,7 @@
 import { BenchmarkSection } from "@/components/landing/benchmark-section";
 import { Reveal } from "@/components/landing/reveal";
 import { AtlasSymbol } from "@/components/brand/logo";
+import { PrivacyNote } from "@/components/research/privacy-note";
 import { MAX_ITERATIONS, MAX_SUBQUESTIONS, MAX_TOOL_CALLS_PER_AGENT } from "@/config/agents";
 import { MAX_INDEX_CHUNKS } from "@/config/chunking";
 import { MAX_EXTRACTED_CHARACTERS, MAX_PDF_PAGES, MAX_PDF_SIZE_LABEL } from "@/config/documents";
@@ -10,6 +11,23 @@ import { DEFAULT_TOP_K, LEXICAL_WEIGHT, SEMANTIC_WEIGHT } from "@/config/retriev
 
 const n = (value: number) => value.toLocaleString("en-US");
 const shortId = (id: string) => id.split("/").pop() ?? id;
+
+/** Default model of the hosted answer route (src/app/api/answer/route.ts). */
+const HOSTED_MODEL = "gpt-4.1-mini";
+const LOCAL_MODEL = shortId(LOCAL_LLM_CONFIG.modelId).replace("-ONNX", "");
+
+const engines = [
+  { label: "Hosted inference", value: ["OpenAI", HOSTED_MODEL], note: "Fast answer generation when enabled." },
+  { label: "Local fallback", value: [LOCAL_MODEL, "WebGPU / WASM"], note: "Runs in the browser when hosted inference is unavailable." },
+];
+
+const limits = [
+  "Text PDFs only, with no OCR for scanned pages.",
+  `Up to ${MAX_PDF_SIZE_LABEL} and ${MAX_PDF_PAGES} pages per PDF.`,
+  "Hosted answers read only the first part of a long document.",
+  "Local speed depends on your device, and the first local run downloads the model.",
+  "Hosted and local answers can differ.",
+];
 
 const pipeline = [
   { step: "01", title: "Parse", body: "PDF.js, page by page." },
@@ -29,12 +47,13 @@ const agents = [
 ];
 
 const specs = [
-  { label: "Answer model", value: shortId(LOCAL_LLM_CONFIG.modelId).replace("-ONNX", ""), note: `${LOCAL_LLM_CONFIG.dtype} on WebGPU · ${LOCAL_LLM_CONFIG.wasmDtype} on WASM` },
+  { label: "Local inference", value: LOCAL_MODEL, note: `${LOCAL_LLM_CONFIG.dtype} on WebGPU · ${LOCAL_LLM_CONFIG.wasmDtype} on WASM` },
   { label: "Context window", value: n(LOCAL_LLM_CONFIG.contextLength), note: "tokens" },
   { label: "Embeddings", value: `${EMBEDDING_DIMENSION}-d`, note: `${shortId(EMBEDDING_MODEL_ID)} · ${EMBEDDING_DTYPE}` },
   { label: "PDF limit", value: MAX_PDF_SIZE_LABEL, note: `${MAX_PDF_PAGES} pages · ${n(MAX_EXTRACTED_CHARACTERS)} chars` },
   { label: "Index", value: n(MAX_INDEX_CHUNKS), note: "chunks, in memory" },
   { label: "Agent loop", value: `${MAX_ITERATIONS}×`, note: "bounded iterations" },
+  { label: "Hosted inference", value: HOSTED_MODEL, note: "OpenAI · when enabled", wide: true },
 ];
 
 function SectionHeading({ eyebrow, title, body, id }: { eyebrow: string; title: string; body?: string; id: string }) {
@@ -56,8 +75,9 @@ export function LandingSections() {
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
           <SectionHeading
             id="pipeline-title"
-            eyebrow="Pipeline"
+            eyebrow="Local research pipeline"
             title="PDF in. Cited answer out."
+            body="Used by Atlas’s browser-local research path."
           />
           <ol className="pipeline mt-12 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-3">
             {pipeline.map((item, index) => (
@@ -69,6 +89,27 @@ export function LandingSections() {
               </Reveal>
             ))}
           </ol>
+
+          <Reveal className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-7">
+            <h3 id="engine-title" className="text-lg font-medium tracking-tight">Answer engine</h3>
+            <p className="mt-2 max-w-2xl text-pretty text-sm leading-6 text-muted-foreground">
+              Atlas tries the hosted OpenAI path when enabled. If it is unavailable, Atlas automatically falls back to local inference in the browser.
+            </p>
+            <dl aria-labelledby="engine-title" className="mt-5 grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/[0.06] md:grid-cols-2">
+              {engines.map((engine) => (
+                <div key={engine.label} className="min-w-0 bg-background p-4 sm:p-5">
+                  <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{engine.label}</dt>
+                  <dd className="mt-2 break-words font-medium tracking-tight">
+                    {engine.value[0]} · <span className="whitespace-nowrap">{engine.value[1]}</span>
+                  </dd>
+                  <dd className="mt-1 text-sm leading-6 text-muted-foreground">{engine.note}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-4 text-xs leading-5 text-muted-foreground">
+              No model selection required. Atlas chooses the available inference path automatically.
+            </p>
+          </Reveal>
         </div>
       </section>
 
@@ -78,6 +119,7 @@ export function LandingSections() {
             id="agents-title"
             eyebrow="Agents"
             title="Five roles. One bounded loop."
+            body="The multi-role research loop powers the browser-local fallback path."
           />
           <ol className="relative space-y-3">
             <span aria-hidden="true" className="agent-rail absolute bottom-6 left-[1.35rem] top-6 w-px" />
@@ -112,13 +154,21 @@ export function LandingSections() {
           />
           <dl className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] lg:grid-cols-3">
             {specs.map((spec, index) => (
-              <Reveal key={spec.label} delay={index * 50} className="card-surface p-5 sm:p-7">
+              <Reveal key={spec.label} delay={index * 50} className={`card-surface min-w-0 p-5 sm:p-7${spec.wide ? " col-span-2 lg:col-span-3" : ""}`}>
                 <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{spec.label}</dt>
                 <dd className="mt-3 break-words text-xl font-semibold tracking-tight sm:text-3xl">{spec.value}</dd>
                 <dd className="mt-1 text-xs leading-5 text-muted-foreground sm:text-sm">{spec.note}</dd>
               </Reveal>
             ))}
           </dl>
+          <Reveal className="mt-8 max-w-2xl">
+            <h3 id="limits-title" className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Current limits</h3>
+            <ul aria-labelledby="limits-title" className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-6 text-muted-foreground marker:text-white/30">
+              {limits.map((limit) => (
+                <li key={limit}>{limit}</li>
+              ))}
+            </ul>
+          </Reveal>
         </div>
       </section>
 
@@ -130,6 +180,9 @@ export function LandingSections() {
           <h2 id="cta-title" className="mt-6 text-balance text-3xl font-semibold tracking-[-0.03em] sm:text-5xl">
             Ask a question. Keep your data.
           </h2>
+          <div className="mt-4">
+            <PrivacyNote />
+          </div>
           <a
             href="#composer"
             className="mt-8 inline-flex h-12 items-center justify-center rounded-full bg-accent px-6 text-sm font-medium text-accent-foreground transition hover:bg-white hover:shadow-[0_0_40px_rgba(126,176,255,0.35)]"
