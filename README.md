@@ -92,17 +92,6 @@ Full details are in [docs/privacy.md](docs/privacy.md).
 - [Evaluation](docs/evaluation.md): fixtures, metrics, and how to run them
 - [Licenses](docs/licenses.md): models and third-party libraries
 
-## Run locally
-
-Requires Node.js and npm.
-
-```bash
-npm ci
-npm run dev
-```
-
-Open http://localhost:3000. The local model needs no key; to enable hosted answers, set `OPENAI_API_KEY` in `.env.local`.
-
 ## Evaluation
 
 Atlas scores retrieval, citations, structured output, and the agent loop against versioned, synthetic fixtures with `npm run eval`. These numbers show the code behaves as designed, not live answer quality; see [docs/evaluation.md](docs/evaluation.md).
