@@ -1,3 +1,5 @@
+import { stripEmphasis } from "@/lib/documents/rewrite";
+
 export type TextPart = { type: "text"; value: string } | { type: "citation"; id: number };
 
 export function citationParts(text: string): TextPart[] {
@@ -19,9 +21,10 @@ export function CitedText({
   /** When given, markers outside this set are dropped instead of rendered as dead links. */
   validIds?: ReadonlySet<number>;
 }) {
-  if (!onCite) return text.replace(/\s*\[\d+\]/g, "");
-  return citationParts(text).map((part, index) => {
-    if (part.type === "text") return <span key={index}>{part.value}</span>;
+  const plain = stripEmphasis(text);
+  if (!onCite) return plain.replace(/\s*\[\d+\]/g, "");
+  return citationParts(plain).map((part, index) => {
+    if (part.type === "text") return <span key={index}>{stripEmphasis(part.value)}</span>;
     if (validIds && !validIds.has(part.id)) return null;
     return (
       <button

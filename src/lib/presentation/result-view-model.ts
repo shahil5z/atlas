@@ -186,7 +186,7 @@ export function buildResultViewModel(session: ResearchSession): ResearchResultVi
 }
 
 function withoutMarkers(text: string): string {
-  return text.replace(/\s*\[\d+\]/g, "").trim();
+  return text.replace(/\*\*/g, "").replace(/__/g, "").replace(/\s*\[\d+\]/g, "").trim();
 }
 
 /** Plain-text copy of the answer for the clipboard (explicit click only). */

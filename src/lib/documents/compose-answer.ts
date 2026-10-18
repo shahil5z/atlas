@@ -10,6 +10,7 @@ import {
   type QualityReport,
 } from "@/lib/answer/answer-plan";
 import { cleanLabel, cleanSentences, collapse, isPromptLike, stripLeadingLabel } from "@/lib/documents/clean-text";
+import { rewriteExcerpt, stripEmphasis } from "@/lib/documents/rewrite";
 import { classifyIntent, type QuestionIntent } from "@/lib/documents/intent";
 import {
   DOCUMENT_KIND_LABEL,
@@ -185,7 +186,7 @@ function focusedAnswer(query: string, pages: readonly PageText[], sources: Sourc
       for (const word of asked) {
         if ([...words].some((item) => item === word || item.startsWith(word) || word.startsWith(item))) overlap += 1;
       }
-      if (overlap > 0) hits.push({ text: easySentence(sentence), pageNumber: page.pageNumber, overlap });
+      if (overlap > 0) hits.push({ text: sentence, pageNumber: page.pageNumber, overlap });
     }
   }
   const ranked = unique(hits.sort((left, right) => right.overlap - left.overlap).map((hit) => `${hit.pageNumber}\u0000${hit.text}`))
@@ -197,7 +198,9 @@ function focusedAnswer(query: string, pages: readonly PageText[], sources: Sourc
   const lead = ranked[0];
   if (!lead) return null;
   const cite = sources.cite(lead.pageNumber, lead.text);
-  return { mode: "specific_answer", summary: `${lead.text} ${cite}`.trim(), sections: [] };
+  const said = rewriteExcerpt(lead.text);
+  if (!said) return null;
+  return { mode: "specific_answer", summary: `${said} ${cite}`.trim(), sections: [] };
 }
 
 const OVERVIEW_INTENTS: QuestionIntent[] = ["document_overview", "document_summary", "key_points"];
@@ -357,7 +360,7 @@ function paperAnswer(
   const title = profile.title && cleanLabel(profile.title) ? profile.title : null;
   const firstPage = pages[0]?.pageNumber ?? 1;
 
-  const opening = abstractSentences[0];
+  const opening = abstractSentences[0] ? stripEmphasis(abstractSentences[0]) : undefined;
   if (!opening) {
     const explained = explainDocument(intent, profile, pages, sources);
     if (explained) return explained;
@@ -408,7 +411,7 @@ function paperAnswer(
 }
 
 function thirdPerson(sentence: string): string {
-  return sentence
+  return stripEmphasis(sentence)
     .replace(/^We\b/, "The authors")
     .replace(/^Our (model|models|work|method|approach|results)\b/, (_, noun: string) => `The ${noun}`)
     .replace(/\bwe\b/g, "the authors")
@@ -433,7 +436,10 @@ function resumeAnswer(intent: QuestionIntent, profile: DocumentProfile, pages: r
   const sections = blocks.slice(0, 4).map((block) => ({
     heading: block.heading,
     paragraphs: [],
-    bullets: block.lines.slice(0, intent === "topics" ? 4 : 6).map((line, index) => (index === 0 ? `${line} ${sources.cite(block.pageNumber, line)}`.trim() : line)),
+    bullets: block.lines.slice(0, intent === "topics" ? 4 : 6).map((line, index) => {
+      const plain = stripEmphasis(line);
+      return index === 0 ? `${plain} ${sources.cite(block.pageNumber, line)}`.trim() : plain;
+    }),
   }));
   return { mode: intent === "document_overview" ? "document_overview" : "document_summary", summary, sections };
 }
@@ -700,24 +706,11 @@ function isLabelOnly(line: string): boolean {
 }
 
 function saysSomething(text: string): boolean {
-  return text.length >= 28 && !isPromptLike(text) && !/:\s*\.?$/.test(text) && /\b(is|are|was|were|has|have|includes?|uses?|supports?|designed|expected|offers?|provides?|makes|can|will|features)\b/i.test(text);
+  return text.length >= 28 && !isPromptLike(text) && !/:\s*\.?$/.test(text) && /\b(is|are|was|were|has|have|includes?|uses?|supports?|designed|expected|offers?|provides?|makes|can|will|features|gives|lets|stays|comes|made|meant|held)\b/i.test(text);
 }
 
 function easySentence(sentence: string): string {
-  const easy = collapse(sentence)
-    .replace(/\ba forthcoming\b/gi, "an upcoming")
-    .replace(/\bforthcoming\b/gi, "upcoming")
-    .replace(/\bwill likely\b/gi, "is expected to")
-    .replace(/\butilizes\b/gi, "uses")
-    .replace(/\bleverages\b/gi, "uses")
-    .replace(/\bincorporates\b/gi, "includes")
-    .replace(/\ba cutting-edge\b/gi, "an advanced")
-    .replace(/\bcutting-edge\b/gi, "advanced");
-  if (/:\s*$/.test(easy)) return "";
-  const words = easy.split(/\s+/);
-  const clipped = words.length > 32 ? `${words.slice(0, 32).join(" ").replace(/[,:;]+$/, "")}…` : easy;
-  if (/:\s*$/.test(clipped)) return "";
-  return /[.!?…]$/.test(clipped) ? clipped : `${clipped}.`;
+  return rewriteExcerpt(sentence);
 }
 
 function sameAsHeading(point: string, heading: string): boolean {
@@ -777,7 +770,7 @@ function genericAnswer(intent: QuestionIntent, profile: DocumentProfile, pages: 
   const intro = pages
     .flatMap((page) => cleanSentences(page.text).map((text) => ({ text, pageNumber: page.pageNumber })))
     .filter((sentence) => !isPromptLike(sentence.text))
-    .slice(0, 2);
+    .slice(0, 4);
   const outline = outlineOf(profile);
   const title = profile.title ? cleanLabel(profile.title) : null;
   const confident = profile.typeConfidence !== "low" && profile.estimatedDocumentType !== "general";
@@ -789,13 +782,16 @@ function genericAnswer(intent: QuestionIntent, profile: DocumentProfile, pages: 
       ? `This ${pagesNote} PDF is titled “${title}”.`
       : `This is a ${pagesNote} PDF.`;
   const lead = intro[0];
-  const about = lead ? ` ${thirdPerson(stripLeadingLabel(lead.text))}` : outline.length > 0 ? ` It covers ${joinList(outline.slice(0, 4).map(lowerFirst))}.` : "";
+  const about = lead ? ` ${rewriteExcerpt(thirdPerson(stripLeadingLabel(lead.text)))}` : outline.length > 0 ? ` It covers ${joinList(outline.slice(0, 4).map(lowerFirst))}.` : "";
   const summary = `${identity}${about} ${sources.cite(lead?.pageNumber ?? firstPage, lead?.text.trim())}`.trim();
   const sections: Section[] = [];
   if (outline.length >= 2) sections.push({ heading: intent === "conclusions" ? "Closing sections" : "What it covers", paragraphs: [], bullets: outline.slice(0, 8) });
-  const second = intro[1];
-  if (second && intent !== "topics" && outline.length < 2) {
-    sections.push({ heading: "", paragraphs: [`${thirdPerson(second.text)} ${sources.cite(second.pageNumber, second.text.trim())}`.trim()], bullets: [] });
+  else if (intent !== "topics" && intro.length > 1) {
+    const points = intro.slice(1, 4).flatMap((sentence) => {
+      const said = rewriteExcerpt(thirdPerson(sentence.text));
+      return said ? [`${said} ${sources.cite(sentence.pageNumber, sentence.text)}`.trim()] : [];
+    });
+    if (points.length > 0) sections.push({ heading: "Main points", paragraphs: [], bullets: points });
   }
   if (!lead && outline.length === 0) return null;
   return { mode: intent === "document_overview" ? "document_overview" : intent === "topics" ? "list" : "document_summary", summary, sections };
@@ -839,7 +835,7 @@ function pageSummary(query: string, pages: readonly PageText[], sources: SourceR
     .map((line) => cleanLabel(line))
     .filter((line): line is string => Boolean(line))
     .slice(0, 6);
-  const lead = sentences[0] ? `Page ${number} begins: ${sentences.slice(0, 2).join(" ")}` : `Page ${number} contains these items.`;
+  const lead = sentences[0] ? `Page ${number} covers ${sentences.slice(0, 2).map((sentence) => rewriteExcerpt(sentence)).filter(Boolean).join(" ")}` : `Page ${number} contains these items.`;
   return {
     mode: "page_summary",
     summary: `${lead} ${sources.cite(number)}`.trim(),
@@ -869,8 +865,8 @@ function compareTopics(query: string, pages: readonly PageText[], sources: Sourc
     mode: "comparison",
     summary: `The document discusses both ${parts[0]} and ${parts[1]}.`,
     sections: [
-      { heading: parts[0] ?? "First", paragraphs: [`${left.line} ${sources.cite(left.pageNumber, left.line)}`], bullets: [] },
-      { heading: parts[1] ?? "Second", paragraphs: [`${right.line} ${sources.cite(right.pageNumber, right.line)}`], bullets: [] },
+      { heading: parts[0] ?? "First", paragraphs: [`${rewriteExcerpt(left.line)} ${sources.cite(left.pageNumber, left.line)}`], bullets: [] },
+      { heading: parts[1] ?? "Second", paragraphs: [`${rewriteExcerpt(right.line)} ${sources.cite(right.pageNumber, right.line)}`], bullets: [] },
     ],
   };
 }

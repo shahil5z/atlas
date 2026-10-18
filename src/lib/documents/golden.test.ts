@@ -245,6 +245,9 @@ describe("synthetic fixtures", () => {
     expect(composed?.structured.sections.length).toBeGreaterThanOrEqual(2);
     expect(composed?.structured.sections.every((section) => section.bullets.length > 0)).toBe(true);
     expect(text).toMatch(/16,896/);
+    expect(text).not.toContain("**");
+    expect(text.toLowerCase()).not.toContain("which provide a significant boost");
+    expect(composed?.structured.sections.every((section) => section.bullets.every((bullet) => !bullet.includes("**")))).toBe(true);
     expect(composed?.structured.overview).toMatch(/^This PDF is about/);
     expect(composed?.structured.sections.every((section) => section.bullets.length === 1)).toBe(true);
     expect(composed?.structured.overview).not.toMatch(/research paper/i);

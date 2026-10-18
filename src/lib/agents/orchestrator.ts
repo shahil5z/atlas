@@ -30,6 +30,7 @@ import {
 import { contentWords } from "@/lib/answer/answer-plan";
 import { completeStructured, extractJsonCandidate, looseAnswerText } from "@/lib/agents/structured";
 import { cleanSentences, isPromptLike } from "@/lib/documents/clean-text";
+import { rewriteExcerpt } from "@/lib/documents/rewrite";
 import { executeTool, type ToolContext } from "@/lib/agents/tools";
 import type {
   AgentEvent,
@@ -596,9 +597,8 @@ function passagesFromDocument(
     const best = [...pool].sort((left, right) => questionOverlap(right, asked) - questionOverlap(left, asked))[0];
     if (!best) return [];
     if (asked.size > 0 && sentences.length > 0 && questionOverlap(best, asked) === 0) return [];
-    const words = best.split(/\s+/).slice(0, 36);
-    const clipped = words.length < best.split(/\s+/).length ? `${words.join(" ")}…` : best;
-    return [{ citation: item.citation, text: clipped }];
+    const said = rewriteExcerpt(best) || best;
+    return [{ citation: item.citation, text: said }];
   });
   const usable = relevant.length > 0 ? relevant.slice(0, 3) : picked.filter((item) => item.text.length > 0 && !isPromptLike(item.text)).slice(0, 2);
   if (usable.length === 0) return null;
@@ -609,7 +609,7 @@ function passagesFromDocument(
     answer,
     keyFindings: [],
     recommendations: [],
-    caveats: ["Quoted from the PDF."],
+    caveats: ["Rewritten from the PDF."],
     citations: usable.map((item) => item.citation),
     knowledgeSource: "document",
     termination,
